@@ -67,6 +67,7 @@
           'Gruntfile.js',
           'src/*.js',
           'src/server/node/*.js',
+          'src/server/node/**/*.js',
           'src/server/node/node_modules/osjs/*.js',
           'src/client/javascript/*.js',
           'src/client/javascript/**/*.js',
@@ -149,6 +150,7 @@
           'Gruntfile.js',
           'src/*.js',
           'src/server/node/*.js',
+          'src/server/node/**/*.js',
           'src/server/node/node_modules/osjs/*.js',
           'src/client/javascript/*.js',
           'src/client/javascript/**/*.js',
@@ -179,20 +181,20 @@
     });
 
     grunt.registerTask('config', 'Build config files (or modify `set:path.to.key:value`, `get:path.to.key`, `preload:name:path:type`, `(add|remove)-repository:name)', function(fn, key, value, arg) {
-      if (fn) {
+      if ( fn ) {
         var result;
-        if (fn === 'get') {
+        if ( fn === 'get' ) {
           grunt.log.writeln('Path: ' + key);
 
           result = _build.getConfigPath(grunt, key);
           grunt.log.writeln('Type: ' + typeof result);
           console.log(result);
-        } else if (fn === 'set') {
+        } else if ( fn === 'set' ) {
           grunt.log.writeln('Path: ' + key);
 
           result = _build.setConfigPath(grunt, key, value);
           console.log(result);
-        } else if (fn === 'preload') {
+        } else if ( fn === 'preload' ) {
           result = _build.addPreload(grunt, key, value, arg);
           console.log(result);
         } else if ( fn === 'add-repository' ) {

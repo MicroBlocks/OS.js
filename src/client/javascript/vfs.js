@@ -204,7 +204,13 @@
     var h = OSjs.Core.getHandler();
 
     h.onVFSRequest(d, method, args, function() {
-      m[d].request(method, args, callback, options);
+      try {
+        m[d].request(method, args, callback, options);
+      } catch ( e ) {
+        var msg = API._('ERR_VFSMODULE_EXCEPTION_FMT', e.toString());
+        callback(msg);
+        console.warn('VFS::request()', 'exception', e.stack, e);
+      }
     });
   }
 
@@ -1070,22 +1076,24 @@
       throw new Error(API._('ERR_VFS_UPLOAD_NO_DEST'));
     }
 
+    function _createFile(filename, mime, size) {
+      var npath = (args.destination + '/' + filename).replace(/\/\/\/\/+/, '///');
+      return new OSjs.VFS.File({
+        filename: filename,
+        path: npath,
+        mime: mime || 'application/octet-stream',
+        size: size
+      });
+    }
+
     function _dialogClose(btn, filename, mime, size) {
       if ( btn !== 'ok' && btn !== 'complete' ) {
         callback(false, false);
         return;
       }
 
-      var npath = (args.destination + '/' + filename).replace(/\/\/\/\/+/, '///');
-      var file = new OSjs.VFS.File({
-        filename: filename,
-        path: npath,
-        mime: mime,
-        size: size
-      });
-
+      var file = _createFile(filename, mime, size);
       API.message('vfs', {type: 'upload', file: file, source: args.app.__pid});
-
       callback(false, file);
     }
 
@@ -1103,16 +1111,18 @@
           file: f
         }, _dialogClose, args.win || args.app);
       } else {
-        OSjs.VFS.internalUpload(f, args.destination, function(type, arg) {
-          if ( type === 'complete' || type === 'success' ) {
-            callback(false, true, arg);
-          } else if ( type === 'failed' ) {
-            var msg = API._('ERR_VFS_UPLOAD_FAIL_FMT', 'Unknown reason');
-            callback(msg, null, arg);
-          } else if ( type === 'canceled' ) {
-            callback(API._('ERR_VFS_UPLOAD_CANCELLED'), null, arg);
-          } else if ( type !== 'progress' ) {
-            callback(arg);
+        OSjs.VFS.internalUpload(f, args.destination, function(err, result, ev) {
+          if ( err ) {
+            if ( err === 'canceled' ) {
+              callback(API._('ERR_VFS_UPLOAD_CANCELLED'), null, ev);
+            } else {
+              var errstr = ev ? ev.toString() : 'Unknown reason';
+              var msg = API._('ERR_VFS_UPLOAD_FAIL_FMT', errstr);
+              callback(msg, null, ev);
+            }
+          } else {
+            var file = _createFile(f.name, f.type, f.size);
+            callback(false, file, ev);
           }
         }, options);
       }
