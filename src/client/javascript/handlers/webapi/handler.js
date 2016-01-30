@@ -219,12 +219,78 @@ See doc/WebAPI-handler.txt
                   action = "exists";
                   payload = { token: token, path: args.path };
                   break;
+              case "FS:scandir":
+                  path = FSURI;
+                  controller = '/';
+                  action = "scandir";
+                  payload = { token: token, path: args.path };
+                  break;
               case "FS:read":
                   path = FSURI;
                   controller = '/';
                   action = "read";
                   payload = { token: token, path: args.path };
                   break;
+              case "FS:xhr":
+                  path = FSURI;
+                  controller = '/';
+                  action = "xhr";
+                  payload = { token: token, path: args.path };
+
+                  var onprogress = args.onprogress || function () { };
+                  return Utils.ajax({
+                      url: path + controller + action,
+                      json: true,
+                      method: 'POST',
+                      body: payload,
+                      responseType: 'arraybuffer',
+                      onprogress: function (ev) {
+                          if (ev.lengthComputable) {
+                              onprogress(ev, ev.loaded / ev.total);
+                          } else {
+                              onprogress(ev, -1);
+                          }
+                      },
+                      onsuccess: function (response, xhr) {
+                          if (!xhr || xhr.status === 404 || xhr.status === 500) {
+                              cbSuccess({ error: xhr.statusText || response, result: null });
+                              return;
+                          }
+                          cbSuccess({ error: false, result: response });
+                      },
+                      onerror: function (error) {
+                          cbError.apply(self, arguments);
+                      }
+                  });
+
+                  break;
+              case "FS:upload":
+                  path = FSURI;
+                  controller = '/';
+                  action = "upload";
+                  payload = args; //{ token: token, path: args.path };
+
+                  var onprogress = args.onprogress || function () { };
+                  return Utils.ajax({
+                      url: path + controller + action,
+                      method: 'POST',
+                      body: payload,
+                      onsuccess: function (result) {
+                          cbSuccess(false, result);
+                      },
+                      onerror: function (result) {
+                          cbError('error', null, result);
+                      },
+                      onprogress: function (evt) {
+                          onprogress(evt);
+                      },
+                      oncanceled: function (evt) {
+                          cbError('canceled', null, evt);
+                      }
+                  });
+
+                  break;
+
               default:
                   path = "";
                   controller = "";
