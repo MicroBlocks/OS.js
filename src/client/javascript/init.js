@@ -264,7 +264,7 @@
     lnk.appendChild(document.createTextNode('Anders Evenrud'));
 
     var el = document.createElement('div');
-    el.id = 'DebugNotice';
+    el.id = 'DebugNotice'; /*
     el.appendChild(document.createTextNode(OSjs.Utils.format('OS.js {0}', ver)));
     el.appendChild(document.createElement('br'));
     el.appendChild(document.createTextNode(cop));
@@ -273,7 +273,7 @@
       el.appendChild(document.createElement('br'));
       el.innerHTML += append;
     }
-
+*/
     document.getElementById('LoadingScreen').style.display = 'none';
 
     document.body.appendChild(el);
