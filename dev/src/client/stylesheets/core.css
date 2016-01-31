@@ -1,6 +1,20 @@
 body {
   background-color : #e2f6fc;
 }
-#LoadingScreen img {
-  width: 100%;
+#LoadingScreen {
+  width: 700px;
+  margin-left: -350px;
+  height: 220px;
+  margin-top: -110px;
+}
+  #LoadingScreen img {
+    width: 100%;
+  }
+#DebugNotice {
+  background-image: url(splash.png);
+  background-size: 209px,120px;
+  background-repeat: no-repeat;
+  height: 65px;
+  width: 210px;
+  opacity: 1;
 }
