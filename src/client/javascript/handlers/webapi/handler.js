@@ -231,7 +231,7 @@ See doc/WebAPI-handler.txt
                   action = "read";
                   payload = { token: token, path: args.path };
                   break;
-              case "FS:xhr":
+              case "FS:get":
                   path = FSURI;
                   controller = '/';
                   action = "xhr";
