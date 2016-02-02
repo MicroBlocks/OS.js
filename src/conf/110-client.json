@@ -61,13 +61,7 @@
         "Enabled": false
       },
 
-      "Mountpoints": {
-        "shared": {
-          "enabled":     true,
-          "description": "Shared",
-          "icon":        "places/folder-publicshare.png"
-        }
-      }
+      "Mountpoints": { }
     },
 
     "DropboxAPI": {
