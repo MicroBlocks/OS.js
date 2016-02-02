@@ -78,6 +78,7 @@
      */
     out_custom_config:        _path.join(ROOT, 'src', 'conf', '900-custom.json'),
     out_server_config:        _path.join(ROOT, 'src', 'server', 'settings.json'),
+    out_server_manifest:      _path.join(ROOT, 'src', 'server', 'packages.json'),
     out_client_js:            _path.join(ROOT, 'dist', 'osjs.js'),
     out_client_css:           _path.join(ROOT, 'dist', 'osjs.css'),
     out_client_dialogs:       _path.join(ROOT, 'dist', 'dialogs.html'),
@@ -807,6 +808,12 @@
         jsonSettings.vfs.mounts[key] = fixWinPath(jsonSettings.vfs.mounts[key]);
       });
 
+      Object.keys(cfg.server).forEach(function(k) {
+        if ( typeof jsonSettings[k] === 'undefined' ) {
+          jsonSettings[k] = cfg.server[k];
+        }
+      });
+
       // Write
       var tpl = JSON.stringify(jsonSettings, null, 4);
       writeFile(PATHS.out_server_config, tpl);
@@ -1516,6 +1523,9 @@
 
     generate(PATHS.out_client_manifest, 'dist');
     generate(PATHS.out_client_dev_manifest, 'dist-dev');
+
+    var packages = readPackageMetadata(grunt);
+    writeFile(PATHS.out_server_manifest, JSON.stringify(packages, null, 4));
   }
 
   /**
