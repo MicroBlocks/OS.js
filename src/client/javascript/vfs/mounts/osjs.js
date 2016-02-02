@@ -85,7 +85,7 @@
     root: 'osjs:///',
     match: /^osjs\:\/\//,
     icon: 'devices/harddrive.png',
-    visible: true,
+    visible: false,
     internal: true,
     unmount: function(cb) {
       cb = cb || function() {};
