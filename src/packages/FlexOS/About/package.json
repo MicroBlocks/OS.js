@@ -1,0 +1,46 @@
+{
+  "className": "ApplicationAbout",
+  "name": "About FlexOS",
+  "description": "About FlexOS",
+  "names": {
+    "bg_BG": " За FlexOS",
+    "de_DE": "Über FlexOS",
+    "fr_FR": "À propos d'FlexOS",
+    "it_IT": "Informazioni su FlexOS",
+    "ko_KR": "FlexOS에 대하여",
+    "nl_NL": "Over FlexOS",
+    "no_NO": "Om FlexOS",
+    "pl_PL": "o FlexOS",
+    "ru_RU": "Об FlexOS",
+    "sk_SK": "o FlexOS",
+    "tr_TR": "hakkında FlexOS",
+    "vi_VN": "Thông tin về FlexOS"
+  },
+  "descriptions": {
+    "bg_BG": "За FlexOS",
+    "de_DE": "Über FlexOS",
+    "fr_FR": "À propos d'FlexOS",
+    "it_IT": "Informazioni su FlexOS",
+    "ko_KR": "FlexOS에 대하여",
+    "nl_NL": "Over FlexOS",
+    "no_NO": "Om FlexOS",
+    "pl_PL": "o FlexOS",
+    "ru_RU": "Об FlexOS",
+    "sk_SK": "o FlexOS",
+    "tr_TR": "hakkında FlexOS",
+    "vi_VN": "Thông tin về FlexOS"
+  },
+  "singular": true,
+  "category": "system",
+  "icon": "apps/help-browser.png",
+  "preload": [
+    {
+      "src": "main.js",
+      "type": "javascript"
+    },
+    {
+      "src": "main.css",
+      "type": "stylesheet"
+    }
+  ]
+}

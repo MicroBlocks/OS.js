@@ -1,0 +1,301 @@
+application-window-top .WindowFrost {
+  position : absolute;
+  top : 0;
+  left : 0;
+  width : 100%;
+  height : 100%;
+  -webkit-filter : blur(4px);
+  opacity : .5;
+}
+
+/**
+ * Default Wallpaper stuff
+ */
+body[data-background-style="color"] {
+  background-image : none;
+}
+body[data-background-style="default"] {
+  background-repeat : repeat;
+}
+body[data-background-style="normal"] {
+  background-repeat : no-repeat;
+}
+body[data-background-style="center"] {
+  background-repeat : no-repeat;
+  background-position : center center;
+}
+body[data-background-style="fill"] {
+  background-repeat : no-repeat;
+  background-size : cover;
+  background-position : center center;
+  /*
+  background-attachment : fixed;
+  */
+}
+body[data-background-style="strech"] {
+  background-repeat : no-repeat;
+  background-size : 100% auto;
+}
+
+/**
+ * Desktop Notification
+ */
+corewm-notifications {
+  position : absolute;
+  top : 0;
+  right : 0;
+  z-index : 10000000;
+  width : 400px;
+}
+
+corewm-notification-entry {
+  display : block;
+  position : relative;
+  min-height : 10px;
+  padding : 10px;
+  margin : 10px;
+  overflow : hidden;
+  white-space : nowrap;
+}
+corewm-notification-entry.HasIcon {
+  min-height : 32px;
+}
+corewm-notification-entry.HasIcon img {
+  position : absolute;
+}
+corewm-notification-entry.HasIcon .Title,
+corewm-notification-entry.HasIcon .Message {
+  margin-left : 32px;
+  padding-left : 5px;
+  white-space: -moz-pre-wrap;
+  white-space:   -o-pre-wrap;
+  white-space:     -pre-wrap;
+  white-space:      pre-wrap;
+  word-wrap: break-word;
+}
+corewm-notification-entry:before {
+  content : '';
+  position : absolute;
+  top : 0;
+  left : 0;
+  right : 0;
+  bottom : 0;
+  z-index : -1;
+}
+
+/**
+ * WindowManager Panels
+ */
+corewm-panel {
+  display : block;
+  position : absolute;
+  top : 0;
+  left : 0;
+  right : 0;
+  overflow : visible;
+  z-index : 2;
+  margin : 0;
+
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+corewm-panel:before {
+  content : '';
+  display : block;
+  position : absolute;
+  top : 0;
+  left : 0;
+  right : 0;
+  bottom : 0;
+  z-index : 1;
+}
+corewm-panel-item {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  min-width : 26px;
+  min-height : 26px;
+}
+corewm-panel[data-ontop="true"] {
+  z-index : 9999998;
+}
+corewm-panel[data-position="bottom"] {
+  top : auto;
+  bottom : 0;
+}
+corewm-panel[data-autohide="true"] {
+  height : 0;
+}
+corewm-panel[data-autohide="true"] > * {
+  visibility : hidden;
+}
+corewm-panel ul {
+  margin : 0;
+  padding : 0;
+  list-style-type : none;
+  position : relative;
+  z-index : 10;
+}
+corewm-panel-container {
+  height : 26px;
+  position : relative;
+  z-index : 10;
+
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-flex-wrap: nowrap;
+     -moz-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+       -o-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+}
+corewm-panel-item .Button {
+  margin : 0;
+  padding : 0;
+  padding-left : 5px;
+  padding-right : 5px;
+  margin-left : 5px;
+  height : 26px;
+  line-height : 26px;
+  max-width : 150px;
+
+  white-space : nowrap;
+  display : inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+corewm-panel-item .Button:last-child {
+  margin-right : 0;
+}
+corewm-panel-item .Button span {
+  padding-left : 5px;
+}
+corewm-panel-item .Button img {
+  vertical-align : middle;
+}
+corewm-panel-item .Button.Ghost {
+  background-color : red !important;
+  min-width : 16px;
+}
+corewm-panel-container > li ul {
+  display : inline-block;
+}
+
+/*corewm-panel .PanelItemStatic {
+}*/
+corewm-panel .PanelItemFill {
+  -webkit-flex: 0 0 auto;
+     -moz-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+       -o-flex: 0 0 auto;
+          flex: 0 0 auto;
+}
+corewm-panel .PanelItemWide {
+  -webkit-flex: 1 1 auto;
+     -moz-flex: 1 1 auto;
+      -ms-flex: 1 1 auto;
+       -o-flex: 1 1 auto;
+          flex: 1 1 auto;
+}
+
+corewm-panel .PanelItemRight {
+  -webkit-align-self : flex-end;
+     -moz-align-self : flex-end;
+      -ms-align-self : flex-end;
+       -o-align-self : flex-end;
+          align-self : flex-end;
+}
+
+
+/**
+ * Window Switcher
+ */
+corewm-window-switcher {
+  display : block;
+  position : absolute;
+  top : 50%;
+  left : 50%;
+  width : 256px;
+  z-index : 999999;
+  overflow : hidden;
+  margin-left : -128px;
+}
+corewm-window-switcher > div {
+  width : 256px;
+  height : 32px;
+  line-height : 32px;
+  overflow : hidden;
+}
+corewm-window-switcher > div > img {
+  vertical-align : middle;
+  margin-right : 5px;
+  margin-left : 5px;
+}
+/*corewm-window-switcher > div > span {
+}
+corewm-window-switcher > div.Active {
+}*/
+
+#CoreWMDesktopIconView {
+  background : transparent !important;
+  position : absolute;
+  top : 10px;
+  left : 10px;
+  right : 10px;
+  bottom : 10px;
+  z-index : 1;
+  border : 0 none !important;
+  box-shadow : none !important;
+  pointer-events : none;
+}
+#CoreWMDesktopIconView > gui-icon-view-body > * {
+  pointer-events : all;
+}
+/*
+.CoreWMDesktopIconView span {
+  -webkit-filter: invert(100%);
+  filter: invert(100%);
+}
+*/
+
+#CoreWMApplicationMenu {
+  z-index : 9999999999;
+  position : absolute;
+  min-width : 100px;
+  min-height : 100px;
+  width : 480px;
+  overflow : hidden;
+  padding : 0;
+}
+
+#CoreWMApplicationMenu gui-menu-entry {
+  width : 72px;
+  height : 72px;
+  padding : 4px;
+  display : inline-block;
+  overflow : hidden;
+  text-align : center;
+  line-height : 16px;
+  position : relative;
+  box-sizing : border-box;
+}
+
+#CoreWMApplicationMenu gui-menu-entry img {
+  padding-top : 4px;
+  width : 32px;
+}
+#CoreWMApplicationMenu gui-menu-entry div {
+  white-space : normal;
+  max-height : 30px;
+  padding : 4px;
+}
