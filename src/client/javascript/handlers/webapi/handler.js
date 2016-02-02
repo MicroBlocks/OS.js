@@ -199,7 +199,7 @@ See doc/WebAPI-handler.txt
                   path = APIURI;
                   controller = "/auth/";
                   action = method;
-                  payload = { companyname: 'test', username: args.username, password: args.password };
+                  payload = { companyname: 'demo', username: args.username, password: args.password };
                   break;
               case "logout":
                   path = APIURI;
