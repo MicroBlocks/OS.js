@@ -37,13 +37,17 @@
   // API
   /////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * These methods will be added to the OS.js `API` namespace
+   */
   var API = {
     login: function(args, callback, request, response, config, handler) {
       handler.onLogin(request, response, {
+        userSettings: {},
         userData: {
           id: 0,
-          username: 'demo',
-          name: 'Demo User',
+          username: 'test',
+          name: 'EXAMPLE handler user',
           groups: ['admin']
         }
       }, callback);
@@ -51,6 +55,10 @@
 
     logout: function(args, callback, request, response, config, handler) {
       handler.onLogout(request, response, callback);
+    },
+
+    settings: function(args, callback, request, response, config, handler) {
+      callback(false, true);
     }
   };
 
@@ -59,43 +67,34 @@
   /////////////////////////////////////////////////////////////////////////////
 
   /**
-   * @api handler.DemoHandler
+   * This is your handler class
+   *
+   * Out-of-the-box support for permissions! You just have to make sure your
+   * login method returns the right groups.
+   *
+   * @link http://os.js.org/doc/tutorials/create-handler.html
+   *
+   * @api handler.EXAMPLEHandler
    * @see handler.Handler
    * @class
    */
   exports.register = function(instance, DefaultHandler) {
-    function DemoHandler() {
+    function EXAMPLEHandler() {
       DefaultHandler.call(this, instance, API);
     }
 
-    DemoHandler.prototype = Object.create(DefaultHandler.prototype);
-    DemoHandler.constructor = DefaultHandler;
+    EXAMPLEHandler.prototype = Object.create(DefaultHandler.prototype);
+    EXAMPLEHandler.constructor = DefaultHandler;
 
-    /**
-     * By default OS.js will check src/conf for group permissions.
-     * This overrides and leaves no checks (full access)
-     */
-    DemoHandler.prototype.checkAPIPrivilege = function(request, response, privilege, callback) {
-      this._checkHasSession(request, response, callback);
+    EXAMPLEHandler.prototype.onServerStart = function(cb) {
+      cb();
     };
 
-    /**
-     * By default OS.js will check src/conf for group permissions.
-     * This overrides and leaves no checks (full access)
-     */
-    DemoHandler.prototype.checkVFSPrivilege = function(request, response, path, args, callback) {
-      this._checkHasSession(request, response, callback);
+    EXAMPLEHandler.prototype.onServerEnd = function(cb) {
+      cb();
     };
 
-    /**
-     * By default OS.js will check src/conf for group permissions.
-     * This overrides and leaves no checks (full access)
-     */
-    DemoHandler.prototype.checkPackagePrivilege = function(request, response, packageName, callback) {
-      this._checkHasSession(request, response, callback);
-    };
-
-    return new DemoHandler();
+    return new EXAMPLEHandler();
   };
 
 })();

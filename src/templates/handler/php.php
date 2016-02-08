@@ -2,9 +2,6 @@
 /*!
  * OS.js - JavaScript Operating System
  *
- * Example Handler: Login screen and session/settings handling via database
- * PLEASE NOTE THAT THIS AN EXAMPLE ONLY, AND SHOUD BE MODIFIED BEFORE USAGE
- *
  * Copyright (c) 2011-2016, Anders Evenrud <andersevenrud@gmail.com>
  * All rights reserved.
  * 
@@ -33,16 +30,21 @@
  */
 
 /**
- * DemoAPIHandler for demoing
+ * This is your handler class
+ *
+ * Out-of-the-box support for permissions! You just have to make sure your
+ * login method returns the right groups.
+ *
+ * @link http://os.js.org/doc/tutorials/create-handler.html
  */
-class DemoAPIHandler
+class EXAMPLEAPIHandler
   extends APIHandler
 {
   public static function login(Array $arguments) {
     $user = APIUser::login(Array(
       "id" => 0,
-      "username" => "demo",
-      "name" => "Demo User",
+      "username" => "test",
+      "name" => "EXAMPLE handler user",
       "groups" => Array("admin")
     ));
     return Array(false, $user->getData());
@@ -53,17 +55,15 @@ class DemoAPIHandler
     return Array(false, true);
   }
 
-  /**
-   * Demo handler allows EVERYTHING
-   */
-  public static function checkPrivilege($requires = null) {
-    APIHandler::checkPrivilege(true);
+  public static function settings(Array $arguments) {
+    return Array(false, true);
   }
 
 }
 
-API::AddHandler('login', Array('DemoAPIHandler', 'login'));
-API::AddHandler('logout', Array('DemoAPIHandler', 'logout'));
-API::SetHandler('DemoAPIHandler');
+API::AddHandler('login', Array('EXAMPLEAPIHandler', 'login'));
+API::AddHandler('logout', Array('EXAMPLEAPIHandler', 'logout'));
+API::AddHandler('logout', Array('EXAMPLEAPIHandler', 'settings'));
+API::SetHandler('EXAMPLEAPIHandler');
 
 ?>

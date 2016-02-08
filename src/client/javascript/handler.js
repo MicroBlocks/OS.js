@@ -189,13 +189,13 @@
     var opts = {username: username, password: password};
     this.callAPI('login', opts, function(response) {
       if ( response.result ) { // This contains an object with user data
-        callback(response.result);
+        callback(false, response.result);
       } else {
-        callback(false, response.error ? ('Error while logging in: ' + response.error) : 'Invalid login');
+        var error = response.error || API._('ERR_LOGIN_INVALID');
+        callback(API._('ERR_LOGIN_FMT', error), false);
       }
-
     }, function(error) {
-      callback(false, 'Login error: ' + error);
+      callback(API._('ERR_LOGIN_FMT', error), false);
     });
   };
 
@@ -412,6 +412,10 @@
    * @see  _Handler::callAPI()
    */
   _Handler.prototype.__callNW = function(method, args, options, cbSuccess, cbError) {
+    cbError = cbError || function() {
+      console.warn('Handler::__callNW()', 'error', arguments);
+    };
+
     try {
       this.nw.request(method.match(/^FS\:/) !== null, method.replace(/^FS\:/, ''), args, function(err, res) {
         cbSuccess({error: err, result: res});
@@ -432,6 +436,11 @@
    */
   _Handler.prototype.__callXHR = function(url, args, options, cbSuccess, cbError) {
     var self = this;
+
+    cbError = cbError || function() {
+      console.warn('Handler::__callXHR()', 'error', arguments);
+    };
+
     var data = {
       url: url,
       method: 'POST',
@@ -500,6 +509,10 @@
   _Handler.prototype.__callPOST = function(form, options, cbSuccess, cbError) {
     var onprogress = options.onprogress || function() {};
 
+    cbError = cbError || function() {
+      console.warn('Handler::__callPOST()', 'error', arguments);
+    };
+
     OSjs.Utils.ajax({
       url: OSjs.VFS.Transports.Internal.path(),
       method: 'POST',
@@ -531,6 +544,10 @@
   _Handler.prototype.__callGET = function(args, options, cbSuccess, cbError) {
     var self = this;
     var onprogress = args.onprogress || function() {};
+
+    cbError = cbError || function() {
+      console.warn('Handler::__callGET()', 'error', arguments);
+    };
 
     Utils.ajax({
       url: args.url || OSjs.VFS.Transports.Internal.path(args.path),
@@ -565,22 +582,22 @@
   /**
    * Called when login() is finished
    *
-   * @param   Object    userData      JSON User Data
-   * @param   Object    userSettings  JSON User Settings
+   * @param   Object    data          JSON Data from login action (userData, userSettings, etc)
    * @param   Function  callback      Callback function
    *
    * @return  void
    *
    * @method  _Handler::onLogin()
    */
-  _Handler.prototype.onLogin = function(userData, userSettings, callback) {
+  _Handler.prototype.onLogin = function(data, callback) {
     callback = callback || function() {};
 
+    var userSettings = data.userSettings;
     if ( !userSettings || userSettings instanceof Array ) {
       userSettings = {};
     }
 
-    this.userData = userData;
+    this.userData = data.userData;
 
     // Ensure we get the user-selected locale configured from WM
     function getUserLocale() {
@@ -598,6 +615,11 @@
 
     API.setLocale(getUserLocale());
     OSjs.Core.getSettingsManager().init(userSettings);
+
+    if ( data.blacklistedPackages ) {
+      OSjs.Core.getPackageManager().setBlacklist(data.blacklistedPackages);
+    }
+
     callback();
   };
 
@@ -691,7 +713,7 @@
     }
 
     function _login(username, password) {
-      self.login(username, password, function(result, error) {
+      self.login(username, password, function(error, result) {
         if ( error ) {
           alert(error);
           _restore();
@@ -701,7 +723,7 @@
         console.debug('OSjs::Handlers::init()', 'login response', result);
         container.parentNode.removeChild(container);
 
-        self.onLogin(result.userData, result.userSettings, function() {
+        self.onLogin(result, function() {
           callback();
         });
       });

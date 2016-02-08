@@ -35,17 +35,6 @@
   var connection;
 
   /////////////////////////////////////////////////////////////////////////////
-  // CONFIGURATION
-  /////////////////////////////////////////////////////////////////////////////
-
-  var MYSQL_CONFIG = {
-    host     : 'localhost',
-    user     : 'osjs',
-    password : 'osjs',
-    database : 'osjs'
-  };
-
-  /////////////////////////////////////////////////////////////////////////////
   // USER SESSION ABSTRACTION
   /////////////////////////////////////////////////////////////////////////////
 
@@ -54,15 +43,15 @@
     console.log('APIUser::login()');
 
     function complete(data) {
-      callback(false, {
-        userData : {
+      handler.onLogin(request, response, {
+        userData: {
           id : data.id,
           username : data.username,
           name : data.name,
           groups : data.groups
         },
         userSettings: data.settings
-      });
+      }, callback);
     }
 
     function invalid() {
@@ -81,7 +70,7 @@
     }
 
     function getUserInfo() {
-      var q = 'SELECT `id`, `username`, `name`, `groups`, `settings` FROM `osjs_users` WHERE `username` = ? LIMIT 1;';
+      var q = 'SELECT `id`, `username`, `name`, `groups`, `settings` FROM `users` WHERE `username` = ? LIMIT 1;';
       var a = [login.username];
 
       connection.query(q, a, function(err, rows, fields) {
@@ -120,7 +109,7 @@
       });
     }
 
-    var q = 'SELECT `password` FROM `osjs_users` WHERE `username` = ? LIMIT 1;';
+    var q = 'SELECT `password` FROM `users` WHERE `username` = ? LIMIT 1;';
     var a = [login.username];
 
     connection.query(q, a, function(err, rows, fields) {
@@ -133,10 +122,14 @@
         var row = rows[0];
         var hash = row.password.replace(/^\$2y(.+)$/i, '\$2a$1');
         bcrypt.compare(login.password, hash, function(err, res) {
-          if ( res === true ) {
-            getUserInfo();
+          if ( err ) {
+            onerror(err);
           } else {
-            invalid();
+            if ( res === true ) {
+              getUserInfo();
+            } else {
+              invalid();
+            }
           }
         });
         return;
@@ -174,16 +167,14 @@
           return;
         }
 
-        handler.setUserData(request, response, result.userData, function() {
+        handler.onLogin(request, response, result, function() {
           callback(false, result);
         });
       }, config, handler);
     },
 
     logout: function(args, callback, request, response, config, handler) {
-      handler.setUserData(request, response, null, function() {
-        callback(false, true);
-      });
+      handler.onLogout(request, response, callback);
     },
 
     settings: function(args, callback, request, response, config, handler) {
@@ -209,8 +200,10 @@
     MysqlHandler.constructor = DefaultHandler;
 
     MysqlHandler.prototype.onServerStart = function(cb) {
+      var cfg = instance.config.handlers.mysql;
+
       if ( !connection ) {
-        connection = mysql.createConnection(MYSQL_CONFIG);
+        connection = mysql.createConnection(cfg);
         connection.connect(function() {
           cb();
         });

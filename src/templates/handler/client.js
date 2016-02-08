@@ -1,9 +1,6 @@
 /*!
  * OS.js - JavaScript Cloud/Web Desktop Platform
  *
- * Example Handler: Login screen and session/settings handling via database
- * PLEASE NOTE THAT THIS AN EXAMPLE ONLY, AND SHOUD BE MODIFIED BEFORE USAGE
- *
  * Copyright (c) 2011-2016, Anders Evenrud <andersevenrud@gmail.com>
  * All rights reserved.
  *
@@ -30,72 +27,50 @@
  * @author  Anders Evenrud <andersevenrud@gmail.com>
  * @licence Simplified BSD License
  */
-(function() {
+(function(API, Utils, VFS) {
   'use strict';
 
+  window.OSjs = window.OSjs || {};
+  OSjs.Core   = OSjs.Core   || {};
+
   /////////////////////////////////////////////////////////////////////////////
-  // API
+  // HANDLER
   /////////////////////////////////////////////////////////////////////////////
 
-  var API = {
-    login: function(args, callback, request, response, config, handler) {
-      handler.onLogin(request, response, {
-        userData: {
-          id: 0,
-          username: 'demo',
-          name: 'Demo User',
-          groups: ['admin']
-        }
-      }, callback);
-    },
+  /**
+   * @extends OSjs.Core._Handler
+   * @class
+   */
+  function EXAMPLEHandler() {
+    OSjs.Core._Handler.apply(this, arguments);
+  }
 
-    logout: function(args, callback, request, response, config, handler) {
-      handler.onLogout(request, response, callback);
-    }
+  EXAMPLEHandler.prototype = Object.create(OSjs.Core._Handler.prototype);
+  EXAMPLEHandler.constructor = OSjs.Core._Handler;
+
+  EXAMPLEHandler.prototype.init = function(callback) {
+    var self = this;
+    OSjs.Core._Handler.prototype.init.call(this, function() {
+      self.initLoginScreen(callback);
+    });
+  };
+
+  EXAMPLEHandler.prototype.login = function(username, password, callback) {
+    return OSjs.Core._Handler.prototype.login.apply(this, arguments);
+  };
+
+  EXAMPLEHandler.prototype.logout = function(save, callback) {
+    return OSjs.Core._Handler.prototype.logout.apply(this, arguments);
+  };
+
+  EXAMPLEHandler.prototype.saveSettings = function(pool, storage, callback) {
+    return OSjs.Core._Handler.prototype.saveSettings.apply(this, arguments);
   };
 
   /////////////////////////////////////////////////////////////////////////////
   // EXPORTS
   /////////////////////////////////////////////////////////////////////////////
 
-  /**
-   * @api handler.DemoHandler
-   * @see handler.Handler
-   * @class
-   */
-  exports.register = function(instance, DefaultHandler) {
-    function DemoHandler() {
-      DefaultHandler.call(this, instance, API);
-    }
+  OSjs.Core.Handler = EXAMPLEHandler;
 
-    DemoHandler.prototype = Object.create(DefaultHandler.prototype);
-    DemoHandler.constructor = DefaultHandler;
-
-    /**
-     * By default OS.js will check src/conf for group permissions.
-     * This overrides and leaves no checks (full access)
-     */
-    DemoHandler.prototype.checkAPIPrivilege = function(request, response, privilege, callback) {
-      this._checkHasSession(request, response, callback);
-    };
-
-    /**
-     * By default OS.js will check src/conf for group permissions.
-     * This overrides and leaves no checks (full access)
-     */
-    DemoHandler.prototype.checkVFSPrivilege = function(request, response, path, args, callback) {
-      this._checkHasSession(request, response, callback);
-    };
-
-    /**
-     * By default OS.js will check src/conf for group permissions.
-     * This overrides and leaves no checks (full access)
-     */
-    DemoHandler.prototype.checkPackagePrivilege = function(request, response, packageName, callback) {
-      this._checkHasSession(request, response, callback);
-    };
-
-    return new DemoHandler();
-  };
-
-})();
+})(OSjs.API, OSjs.Utils, OSjs.VFS);

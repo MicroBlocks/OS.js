@@ -8,6 +8,10 @@ $ npm install node-mysql brypt
 
 # Change `handler` to `mysql`.
 $ grunt config:set:handler:mysql
+$ grunt config:set:server:handlers:mysql:host:localhost
+$ grunt config:set:server:handlers:mysql:user:osjsuser
+$ grunt config:set:server:handlers:mysql:password:osjspassword
+$ grunt config:set:server:handlers:mysql:database:osjs
 
 # Update configurations
 $ grunt config
@@ -16,14 +20,6 @@ $ grunt config
 # grunt core
 
 ```
-
-### Configure
-
-Then set up the configuration in these files (you only need to edit the one you use):
-
-- `src/server/php/handlers/mysql/handler.php`
-- `src/server/node/handlers/mysql/handler.js`
-
 
 ### Mysql Database table
 
